@@ -1,12 +1,11 @@
+from api.serializers import (CommentSerializer, FollowSerializer,
+                             GroupSerializer, PostSerializer)
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from posts.models import Follow, Group, Post
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
-
-from .serializers import (CommentSerializer, FollowSerializer, GroupSerializer,
-                          PostSerializer)
 
 User = get_user_model()
 
