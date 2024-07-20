@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().select_related('author', 'group')
+    queryset = Post.objects.all().select_related('author')
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
 
@@ -40,7 +40,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         post_id = self.kwargs.get('post_id')
         post = get_object_or_404(Post, pk=post_id)
-        comments = post.comments.all()
+        comments = post.comments.all().select_related('author')
         return comments
 
     def perform_create(self, serializer):
@@ -67,7 +67,10 @@ class FollowViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     search_fields = ('following__username',)
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        user_id = self.request.user.id
+        user = get_object_or_404(User, pk=user_id)
+        following = user.follow.all().select_related('following')
+        return following
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

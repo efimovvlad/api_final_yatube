@@ -5,15 +5,23 @@ User = get_user_model()
 
 
 class Group(models.Model):
+    """Модель описывающая группу"""
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
+
+    class Meta:
+        verbose_name = 'группа'
+        verbose_name_plural = 'Группы'
 
     def __str__(self):
         return self.title
 
 
 class Post(models.Model):
+    """Модель описывающая пост"""
+
     text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
@@ -24,11 +32,17 @@ class Post(models.Model):
         Group, on_delete=models.SET_NULL,
         related_name='posts', blank=True, null=True)
 
+    class Meta:
+        verbose_name = 'пост'
+        verbose_name_plural = 'Посты'
+
     def __str__(self):
         return self.text
 
 
 class Comment(models.Model):
+    """Модель описывающая комментарий"""
+
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
@@ -37,9 +51,25 @@ class Comment(models.Model):
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
 
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text
+
 
 class Follow(models.Model):
+    """Модель описывающая подписку"""
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='follow')
     following = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='following')
+
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return self.text
